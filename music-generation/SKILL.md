@@ -42,7 +42,13 @@ curl -X POST https://fairstack.ai/v1/music/generate \
     "prompt": "Upbeat indie pop with acoustic guitar and handclaps",
     "duration_sec": 60,
     "bpm": 120,
-    "key": "G major"
+    "key": "G major",
+    "project": "podcast",
+    "tags": [
+      {"key": "tag", "value": "intro"},
+      {"key": "tag", "value": "upbeat"},
+      {"key": "tag", "value": "indie-pop"}
+    ]
   }'
 
 # Response: {"data": {"generation_id": "gen_music_123", "status": "running", ...}}
@@ -50,6 +56,16 @@ curl -X POST https://fairstack.ai/v1/music/generate \
 # 2. Poll for completion
 curl https://fairstack.ai/v1/generations/gen_music_123 \
   -H "Authorization: Bearer $FAIRSTACK_API_KEY"
+```
+
+### CLI
+
+```bash
+fairstack generate music \
+  --prompt "Upbeat indie pop with acoustic guitar and handclaps" \
+  --duration 60 --bpm 120 --key "G major" \
+  --project podcast \
+  --tags "intro, upbeat, indie-pop"
 ```
 
 ### JavaScript / TypeScript
@@ -181,6 +197,8 @@ while True:
 | `seed` | number | No | Reproducibility seed |
 | `inference_steps` | number | No | Quality steps 1–100 |
 | `guidance_scale` | number | No | Prompt adherence 1–30 |
+| `project` | string | No | Project slug or ID to associate with this generation |
+| `tags` | array | No | Key-value tags for organization (max 20). Format: `[{"key":"tag","value":"intro"}]` |
 | `confirm` | boolean | No | Set `false` for cost quote only |
 | `quote_id` | string | No | Confirm a previously created quote |
 
@@ -265,6 +283,27 @@ curl -X POST https://fairstack.ai/v1/music/edit \
 | 422 | `validation_error` | Invalid parameters (e.g. duration out of range). |
 | 429 | — | Rate limited. 600 req/min. |
 | 503 | `SERVICE_UNAVAILABLE` | Music generation not enabled or provider down. |
+
+---
+
+## Best Practices
+
+### Always use project + tags
+
+Every generation should include `project` and at least 3 tags. Tags help you recover, search, and filter your work later.
+
+```bash
+--project podcast --tags "intro, upbeat, indie-pop"
+```
+
+### Style consistency
+
+This is the #1 quality issue users hit. Inconsistent musical styles across tracks sound jarring in a project.
+
+1. **Define your sonic identity per project.** Lock in a genre, BPM range, and key signature. Use the same prompt structure for all tracks in a project.
+2. **Use the same model for tonal consistency.** Different models have different timbres and production styles.
+3. **Tag which style was used:** `--tags "lo-fi, study-beats, podcast"` so you can filter by style later.
+4. **For agents:** Create a music brief file with genre, BPM, key, and prompt templates that your agent references before generating.
 
 ---
 

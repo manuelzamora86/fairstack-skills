@@ -38,6 +38,12 @@ curl -X POST https://fairstack.ai/v1/image/compare \
   -d '{
     "prompt": "A photorealistic portrait of a woman in golden hour light",
     "models": ["gpt-image-1.5-t2i", "seedream-v4-t2i", "imagen-4-t2i"],
+    "project": "brand-refresh",
+    "tags": [
+      {"key": "tag", "value": "model-compare"},
+      {"key": "tag", "value": "portrait"},
+      {"key": "tag", "value": "brand-refresh"}
+    ],
     "confirm": false
   }'
 ```
@@ -234,6 +240,22 @@ print(f"Total: ${data['total']}")
 | 422 | `validation_error` | Unknown model slug, too many/few models (2-4) |
 | 429 | — | Rate limited |
 | 503 | `SERVICE_UNAVAILABLE` | One or more providers down |
+
+---
+
+## Best Practices
+
+### Always use project + tags
+
+Tag your comparisons so you can find them later. Use a `model-compare` tag to distinguish comparison runs from production generations.
+
+### Style consistency
+
+Model comparison is the tool for *choosing* your project's model. Once you pick the winner:
+
+1. **Stick with that model for the entire project.** Re-run comparisons only when you suspect a model has improved.
+2. **Tag the winning model:** `{"key":"winner","value":"seedream-v4-t2i"}` so your decision is recorded alongside the comparison results.
+3. **For agents:** Record comparison results in a style guide file. Reference it before every generation.
 
 ---
 

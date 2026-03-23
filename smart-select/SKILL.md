@@ -41,7 +41,13 @@ curl -X POST https://fairstack.ai/v1/select-model \
   -d '{
     "prompt": "I need to generate a photorealistic product photo of a sneaker on a white background",
     "modality": "image",
-    "priority": "quality"
+    "priority": "quality",
+    "project": "shoe-catalog",
+    "tags": [
+      {"key": "tag", "value": "product-photo"},
+      {"key": "tag", "value": "sneaker"},
+      {"key": "tag", "value": "model-selection"}
+    ]
   }'
 ```
 
@@ -203,6 +209,22 @@ curl -X POST https://fairstack.ai/v1/select-model \
     "priority": "speed"
   }'
 ```
+
+---
+
+## Best Practices
+
+### Use project + tags with select-model
+
+Tag your model selection requests so you can trace back which model was recommended for each project.
+
+### Style consistency
+
+Smart select is the starting point for locking in your project's model. After getting a recommendation:
+
+1. **Record the recommended model in your project's style guide.** Don't re-query for every generation -- use the same model consistently.
+2. **Re-select only when your needs change** (e.g., switching from quality to cost priority, or a new model launches).
+3. **For agents:** Call select-model once at project setup, record the result, and reference it in all subsequent generation calls.
 
 ---
 

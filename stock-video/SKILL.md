@@ -32,8 +32,16 @@ Get your API key at [fairstack.ai/app/api-keys](https://fairstack.ai/app/api-key
 Search and filter B-roll clips with pagination.
 
 ```bash
-curl "https://fairstack.ai/api/broll?q=sunset&category=nature&aspect_ratio=16:9&limit=10" \
+# Search with project context
+curl "https://fairstack.ai/api/broll?q=sunset&category=nature&aspect_ratio=16:9&limit=10&project=nature-docs" \
   -H "Authorization: Bearer $FAIRSTACK_API_KEY"
+```
+
+### CLI
+
+```bash
+fairstack broll search --q sunset --category nature --aspect-ratio 16:9 \
+  --project nature-docs --tags "b-roll, sunset, hero"
 ```
 
 ### Parameters
@@ -228,6 +236,21 @@ print(resp.json()["url"])
 | 402 | `INSUFFICIENT_CREDITS` | Not enough credits ($0.002 needed) |
 | 404 | — | Clip not found |
 | 429 | — | Rate limited |
+
+---
+
+## Best Practices
+
+### Always tag your B-roll usage
+
+When using stock clips in a project, tag the scene and purpose so you can reconstruct your edit later.
+
+### Style consistency
+
+1. **Filter by pacing and motion intensity** to ensure all clips in a project have a consistent energy level. Mixing "slow" and "fast" pacing creates jarring cuts.
+2. **Use the same aspect ratio throughout.** Don't mix 16:9 and 9:16 clips unless you're explicitly doing a multi-format project.
+3. **Tag usage context:** `{"key":"scene","value":"intro"}, {"key":"pacing","value":"slow"}` for later retrieval.
+4. **For agents:** Create a shot list per project with target categories, pacing, and aspect ratio. Reference it when searching.
 
 ---
 

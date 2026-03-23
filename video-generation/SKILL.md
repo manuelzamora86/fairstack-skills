@@ -42,7 +42,13 @@ curl -X POST https://fairstack.ai/v1/video/generate \
     "prompt": "A drone shot flying over a misty mountain forest at sunrise",
     "model": "sora-2-10s",
     "duration_sec": 10,
-    "aspect_ratio": "16:9"
+    "aspect_ratio": "16:9",
+    "project": "nature-docs",
+    "tags": [
+      {"key": "tag", "value": "b-roll"},
+      {"key": "tag", "value": "aerial"},
+      {"key": "tag", "value": "forest"}
+    ]
   }'
 
 # Response: {"data": {"generation_id": "gen_vid_789", "status": "running", "poll_url": "/v1/generations/gen_vid_789", ...}}
@@ -50,6 +56,18 @@ curl -X POST https://fairstack.ai/v1/video/generate \
 # 2. Poll for completion
 curl https://fairstack.ai/v1/generations/gen_vid_789 \
   -H "Authorization: Bearer $FAIRSTACK_API_KEY"
+```
+
+### CLI
+
+```bash
+fairstack generate video \
+  --prompt "A drone shot flying over a misty mountain forest at sunrise" \
+  --model sora-2-10s \
+  --duration 10 \
+  --aspect-ratio 16:9 \
+  --project nature-docs \
+  --tags "b-roll, aerial, forest"
 ```
 
 ### JavaScript / TypeScript
@@ -67,6 +85,12 @@ const submit = await fetch("https://fairstack.ai/v1/video/generate", {
     model: "sora-2-10s",
     duration_sec: 10,
     aspect_ratio: "16:9",
+    project: "nature-docs",
+    tags: [
+      { key: "tag", value: "b-roll" },
+      { key: "tag", value: "aerial" },
+      { key: "tag", value: "forest" },
+    ],
   }),
 });
 
@@ -109,6 +133,12 @@ resp = requests.post(
         "model": "sora-2-10s",
         "duration_sec": 10,
         "aspect_ratio": "16:9",
+        "project": "nature-docs",
+        "tags": [
+            {"key": "tag", "value": "b-roll"},
+            {"key": "tag", "value": "aerial"},
+            {"key": "tag", "value": "forest"},
+        ],
     },
 )
 job = resp.json()["data"]
@@ -183,6 +213,8 @@ while True:
 | `negative_prompt` | string | No | What to avoid in the output |
 | `parent_generation_id` | string | No | Link to source generation for edit chains |
 | `options` | object | No | Model-specific pass-through parameters |
+| `project` | string | No | Project slug or ID to associate with this generation |
+| `tags` | array | No | Key-value tags for organization (max 20). Format: `[{"key":"tag","value":"b-roll"}]` |
 | `confirm` | boolean | No | Set `false` to get a cost quote without generating |
 | `quote_id` | string | No | Confirm a previously created quote |
 
@@ -300,6 +332,27 @@ curl -X POST https://fairstack.ai/v1/video/extend \
 | 422 | `validation_error` | Invalid parameters. |
 | 429 | — | Rate limited. Video generation: 600 req/min. |
 | 503 | `SERVICE_UNAVAILABLE` | Provider temporarily unavailable. |
+
+---
+
+## Best Practices
+
+### Always use project + tags
+
+Every generation should include `project` and at least 3 tags. Tags help you recover, search, and filter your work later.
+
+```bash
+--project nature-docs --tags "b-roll, aerial, forest"
+```
+
+### Style consistency
+
+This is the #1 quality issue users hit. Inconsistent visual styles across video clips look unprofessional when edited together.
+
+1. **Define 2-3 reusable style prompts per project.** Use consistent cinematic language (e.g., "cinematic color grading, 24fps look, shallow depth of field") across all generations.
+2. **Use the same model for visual consistency within a project.** Mixing models produces noticeably different motion and color profiles.
+3. **Tag which style was used:** `--tags "cinematic-style, b-roll, nature-docs"` so you can filter by style later.
+4. **For agents:** Create a style guide file that your agent references before generating. Include the model slug, prompt suffix, aspect ratio, and duration defaults.
 
 ---
 

@@ -38,6 +38,12 @@ curl -X POST https://fairstack.ai/v1/workflows \
   -d '{
     "name": "Image to Video Pipeline",
     "description": "Generate an image, then animate it to video",
+    "project": "content-pipeline",
+    "tags": [
+      {"key": "tag", "value": "workflow"},
+      {"key": "tag", "value": "image-to-video"},
+      {"key": "tag", "value": "content-pipeline"}
+    ],
     "graph": {
       "nodes": [
         {
@@ -72,6 +78,8 @@ curl -X POST https://fairstack.ai/v1/workflows \
 | `name` | string | **Yes** | Workflow name (max 200 chars) |
 | `description` | string | No | Description (max 2,000 chars) |
 | `graph` | object | **Yes** | Workflow graph with `nodes` and `edges` arrays |
+| `project` | string | No | Project slug or ID to associate workflow and all its runs with |
+| `tags` | array | No | Key-value tags for organization (max 20) |
 
 ### Response (201)
 
@@ -293,6 +301,23 @@ for line in resp.iter_lines():
 | 404 | — | Workflow not found |
 | 422 | `validation_error` | Invalid graph structure or empty nodes |
 | 429 | — | Rate limited |
+
+---
+
+## Best Practices
+
+### Always use project + tags
+
+Every workflow should include `project` and at least 3 tags. Tags propagate to individual run records, making it easy to trace costs and outputs.
+
+### Style consistency
+
+This is the #1 quality issue users hit. Workflows that chain multiple generation types amplify inconsistency.
+
+1. **Define style parameters in each node explicitly.** Don't rely on defaults -- specify the model, style, and quality in every node's `data`.
+2. **Use the same model family within a workflow.** Mixing providers (e.g., fal.ai image -> Kie.ai video) can produce inconsistent aesthetics.
+3. **Use workflow variables for style.** Pass `"variables": {"style": "cinematic, warm lighting"}` and reference `{{style}}` in all nodes.
+4. **For agents:** Create a workflow template with locked models and styles. Vary only the content (prompts, text) between runs.
 
 ---
 

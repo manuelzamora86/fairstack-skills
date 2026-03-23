@@ -72,32 +72,32 @@ Sign up at [fairstack.ai](https://fairstack.ai) and create an API key at [fairst
 export FAIRSTACK_API_KEY="fs_live_..."
 ```
 
-### 3. Generate
+### 3. Generate (always include project + tags)
 
 ```bash
 # Image — $0.009
 curl -X POST https://fairstack.ai/v1/image/generate \
   -H "Authorization: Bearer $FAIRSTACK_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"prompt": "A mountain lake at sunset", "model": "gpt-image-1.5-t2i"}'
+  -d '{"prompt": "A mountain lake at sunset", "model": "gpt-image-1.5-t2i", "project": "my-app", "tags": [{"key":"tag","value":"hero"},{"key":"tag","value":"landscape"},{"key":"tag","value":"marketing"}]}'
 
 # Voice — $0.001
 curl -X POST https://fairstack.ai/v1/voice/generate \
   -H "Authorization: Bearer $FAIRSTACK_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"text": "Hello world", "voice": "internal_marco"}'
+  -d '{"text": "Hello world", "voice": "internal_marco", "project": "my-app", "tags": [{"key":"tag","value":"onboarding"},{"key":"tag","value":"greeting"},{"key":"tag","value":"narration"}]}'
 
 # Video — $0.15 (async)
 curl -X POST https://fairstack.ai/v1/video/generate \
   -H "Authorization: Bearer $FAIRSTACK_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"prompt": "A drone shot over mountains", "model": "sora-2-10s"}'
+  -d '{"prompt": "A drone shot over mountains", "model": "sora-2-10s", "project": "my-app", "tags": [{"key":"tag","value":"b-roll"},{"key":"tag","value":"aerial"},{"key":"tag","value":"mountains"}]}'
 
 # Music — $0.50 (async)
 curl -X POST https://fairstack.ai/v1/music/generate \
   -H "Authorization: Bearer $FAIRSTACK_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"prompt": "Upbeat indie pop", "duration_sec": 60}'
+  -d '{"prompt": "Upbeat indie pop", "duration_sec": 60, "project": "my-app", "tags": [{"key":"tag","value":"intro"},{"key":"tag","value":"upbeat"},{"key":"tag","value":"indie-pop"}]}'
 
 # Sound effects — $0.001
 curl "https://fairstack.ai/api/sfx?q=explosion" \

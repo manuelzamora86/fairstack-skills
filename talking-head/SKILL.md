@@ -38,7 +38,13 @@ curl -X POST https://fairstack.ai/v1/dialogue/generate \
   -d '{
     "text": "Welcome to our product demo! Let me show you how it works.",
     "voice": "internal_marco",
-    "character_image_url": "https://example.com/avatar.jpg"
+    "character_image_url": "https://example.com/avatar.jpg",
+    "project": "product-demo",
+    "tags": [
+      {"key": "tag", "value": "spokesperson"},
+      {"key": "tag", "value": "demo"},
+      {"key": "tag", "value": "welcome"}
+    ]
   }'
 ```
 
@@ -55,6 +61,8 @@ curl -X POST https://fairstack.ai/v1/dialogue/generate \
 | `talking_head_model` | string | No | Lip sync model slug (default: `infinitetalk`) |
 | `resolution` | string | No | `480p` or `720p` |
 | `speakers` | array | No | Multi-speaker dialogue lines |
+| `project` | string | No | Project slug or ID to associate with this generation |
+| `tags` | array | No | Key-value tags for organization (max 20) |
 
 *Either `text` + `voice` or `audio_url` is required. Either `character_image_url` or `character_video_url` is required.
 
@@ -195,8 +203,29 @@ print(data["output"]["url"])
 
 ---
 
+## Best Practices
+
+### Always use project + tags
+
+Every talking head generation should include `project` and at least 3 tags. Tag the character and purpose so you can find all videos for a given spokesperson.
+
+```bash
+--project product-demo --tags "spokesperson, demo, welcome"
+```
+
+### Style consistency
+
+This is the #1 quality issue users hit. Inconsistent character appearance or voice breaks viewer trust.
+
+1. **Use the same character image and voice for all videos in a series.** Changing either mid-series creates a jarring experience.
+2. **Define a character profile** (image URL, voice ID, TTS model) and reuse it across all generations in the project.
+3. **Tag which character was used:** `{"key":"character","value":"marco-avatar"}` so you can filter by character later.
+4. **For agents:** Create a character manifest file with image URL, voice ID, and model slug. Reference it before every generation.
+
+---
+
 ## Pricing
 
 - **Talking head video:** ~$0.35 per video (TTS + lip sync combined)
-- **Compare:** Arcads charges $11 per video — FairStack is 30x cheaper
+- **Compare:** Arcads charges $11 per video -- FairStack is 30x cheaper
 - Use `POST /v1/dialogue/estimate` to get exact cost before generating

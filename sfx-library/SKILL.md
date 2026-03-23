@@ -32,8 +32,16 @@ Get your API key at [fairstack.ai/app/api-keys](https://fairstack.ai/app/api-key
 Search and filter sound effects with pagination.
 
 ```bash
-curl "https://fairstack.ai/api/sfx?q=explosion&category=impacts&limit=10" \
+# Search with project context
+curl "https://fairstack.ai/api/sfx?q=explosion&category=impacts&limit=10&project=action-trailer" \
   -H "Authorization: Bearer $FAIRSTACK_API_KEY"
+```
+
+### CLI
+
+```bash
+fairstack sfx search --q explosion --category impacts \
+  --project action-trailer --tags "sfx, explosion, trailer"
 ```
 
 ### Parameters
@@ -212,6 +220,20 @@ print(resp.json()["url"])
 | 402 | `INSUFFICIENT_CREDITS` | Not enough credits ($0.001 needed) |
 | 404 | — | SFX not found |
 | 429 | — | Rate limited |
+
+---
+
+## Best Practices
+
+### Always tag your SFX usage
+
+When using sound effects in a project, maintain tags for the scene and purpose. This helps you find the right SFX later when editing.
+
+### Style consistency
+
+1. **Build a project sound palette.** Decide on the tone (realistic, cartoon, cinematic) and stick with effects from matching categories.
+2. **Tag usage context:** `{"key":"scene","value":"intro"}, {"key":"mood","value":"dramatic"}` so you can reconstruct your sound design later.
+3. **For agents:** Create a sound design brief per project with preferred categories and example clips.
 
 ---
 

@@ -40,8 +40,25 @@ curl -X POST https://fairstack.ai/v1/image/generate \
   -d '{
     "prompt": "A serene mountain lake at sunset, oil painting style",
     "model": "gpt-image-1.5-t2i",
-    "aspect_ratio": "16:9"
+    "aspect_ratio": "16:9",
+    "project": "jamwise",
+    "tags": [
+      {"key": "tag", "value": "hero-image"},
+      {"key": "tag", "value": "marketing"},
+      {"key": "tag", "value": "landscape"}
+    ]
   }'
+```
+
+### CLI
+
+```bash
+fairstack generate image \
+  --prompt "A serene mountain lake at sunset, oil painting style" \
+  --model gpt-image-1.5-t2i \
+  --aspect-ratio 16:9 \
+  --project jamwise \
+  --tags "hero-image, marketing, landscape"
 ```
 
 ### JavaScript / TypeScript
@@ -57,6 +74,12 @@ const response = await fetch("https://fairstack.ai/v1/image/generate", {
     prompt: "A serene mountain lake at sunset, oil painting style",
     model: "gpt-image-1.5-t2i",
     aspect_ratio: "16:9",
+    project: "jamwise",
+    tags: [
+      { key: "tag", value: "hero-image" },
+      { key: "tag", value: "marketing" },
+      { key: "tag", value: "landscape" },
+    ],
   }),
 });
 
@@ -77,6 +100,12 @@ resp = requests.post(
         "prompt": "A serene mountain lake at sunset, oil painting style",
         "model": "gpt-image-1.5-t2i",
         "aspect_ratio": "16:9",
+        "project": "jamwise",
+        "tags": [
+            {"key": "tag", "value": "hero-image"},
+            {"key": "tag", "value": "marketing"},
+            {"key": "tag", "value": "landscape"},
+        ],
     },
 )
 
@@ -127,6 +156,8 @@ print(data["cost_usd"])  # e.g. 0.0108
 | `search_prompt` | string | No | Auto-find reference images from the web |
 | `search_sources` | string[] | No | Search providers: `"google"`, `"wikimedia"` |
 | `search_count` | number | No | How many search results to consider (1–10) |
+| `project` | string | No | Project slug or ID to associate with this generation |
+| `tags` | array | No | Key-value tags for organization (max 20). Format: `[{"key":"tag","value":"hero"}]` |
 | `confirm` | boolean | No | Set `false` to get a cost quote without generating |
 | `quote_id` | string | No | Confirm a previously created quote |
 
@@ -251,6 +282,27 @@ curl https://fairstack.ai/v1/generations/gen_xyz789 \
   }
 }
 ```
+
+---
+
+## Best Practices
+
+### Always use project + tags
+
+Every generation should include `project` and at least 3 tags. Tags help you recover, search, and filter your work later.
+
+```bash
+--project my-app --tags "hero-image, marketing, homepage"
+```
+
+### Style consistency
+
+This is the #1 quality issue users hit. Inconsistent styles across generations make your project look unprofessional.
+
+1. **Define 2-3 reusable style prompts per project.** Save them with the Styles API (`POST /v1/styles`) so every generation in the project uses the same visual language (e.g., "clean vector, flat colors, music-themed").
+2. **Use the same model for visual consistency within a project.** Mixing models produces noticeably different aesthetics.
+3. **Tag which style was used:** `--tags "marketing-style, hero-image, jamwise"` so you can filter by style later.
+4. **For agents:** Create a style guide file that your agent references before generating. Include the model slug, style prompt suffix, and negative prompt.
 
 ---
 

@@ -54,6 +54,12 @@ curl -X POST https://fairstack.ai/v1/batch \
       "A red sports car on a coastal highway",
       "A vintage motorcycle in a desert at sunset",
       "A sailboat in rough ocean waves"
+    ],
+    "project": "vehicle-campaign",
+    "tags": [
+      {"key": "tag", "value": "vehicles"},
+      {"key": "tag", "value": "marketing"},
+      {"key": "tag", "value": "hero-images"}
     ]
   }'
 ```
@@ -234,6 +240,23 @@ for result in data["results"]:
 | 402 | `INSUFFICIENT_CREDITS` | Not enough credits for the entire batch. |
 | 422 | `validation_error` | Invalid parameters, unknown model, or exceeds max batch size. |
 | 429 | — | Rate limited. 600 req/min. |
+
+---
+
+## Best Practices
+
+### Always use project + tags
+
+Every batch should include `project` and at least 3 tags. Tags apply to all items in the batch and help you find and group your work later.
+
+### Style consistency
+
+This is the #1 quality issue users hit. Batch generation amplifies the problem -- if your prompt style varies, every result looks different.
+
+1. **Use the same model for all items in a batch.** Prompt sweeps do this naturally. For model sweeps, understand that each model produces a different aesthetic.
+2. **Define a consistent style suffix** (e.g., "clean vector, flat colors") and append it to every prompt in the batch.
+3. **Tag which style was used:** `"tags": [{"key":"style","value":"cinematic"}, {"key":"campaign","value":"q1-launch"}]`
+4. **For agents:** Create a batch template file with model, style prompt, and tag defaults.
 
 ---
 

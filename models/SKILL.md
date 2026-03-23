@@ -280,3 +280,15 @@ Returns the supported parameter schema for a model — types, ranges, enums, and
 | 400 | `validation_error` | Invalid `ids` parameter (empty or exceeds 50). |
 | 404 | `NOT_FOUND` | Model slug not found. |
 | 429 | — | Rate limited. Models endpoint: 60 req/min. |
+
+---
+
+## Best Practices
+
+### Style consistency
+
+Browse the model catalog to find the right model, then commit to it for your project. The #1 quality issue is mixing models -- each produces a different aesthetic.
+
+1. **Pick one model per modality per project.** Use `/v1/models?modality=image` to evaluate options, then lock your choice into your project's style guide.
+2. **Check model capabilities** via `/v1/models/:slug` before committing. Look at `intelligence.scores` to verify the model fits your use case.
+3. **For agents:** Query the catalog once, record the chosen model slug, and reference it in all subsequent generation calls.

@@ -37,8 +37,24 @@ curl -X POST https://fairstack.ai/v1/dub/generate \
   -H "Content-Type: application/json" \
   -d '{
     "video_url": "https://example.com/my-video.mp4",
-    "target_lang": "es"
+    "target_lang": "es",
+    "project": "product-demo",
+    "tags": [
+      {"key": "tag", "value": "dubbing"},
+      {"key": "tag", "value": "spanish"},
+      {"key": "tag", "value": "product-demo"}
+    ]
   }'
+```
+
+### CLI
+
+```bash
+fairstack dub \
+  --video-url "https://example.com/my-video.mp4" \
+  --target-lang es \
+  --project product-demo \
+  --tags "dubbing, spanish, product-demo"
 ```
 
 ### Parameters
@@ -50,6 +66,8 @@ curl -X POST https://fairstack.ai/v1/dub/generate \
 | `target_lang` | string | **Yes** | Target language code (`es`, `fr`, `ja`, `de`, `pt`, `zh`, etc.) |
 | `source_lang` | string | No | Source language code (auto-detected if omitted) |
 | `num_speakers` | number | No | Number of speakers (1-10, auto-detected if omitted) |
+| `project` | string | No | Project slug or ID to associate with this generation |
+| `tags` | array | No | Key-value tags for organization (max 20) |
 
 *Either `video_url` or `audio_url` is required.
 
@@ -154,6 +172,23 @@ Common language codes: `en` (English), `es` (Spanish), `fr` (French), `de` (Germ
 | 422 | `validation_error` | Missing video_url/audio_url or invalid target_lang |
 | 429 | — | Rate limited |
 | 503 | `provider_error` | Dubbing model temporarily unavailable |
+
+---
+
+## Best Practices
+
+### Always use project + tags
+
+Every dubbing job should include `project` and at least 3 tags. Tag the target language so you can filter all Spanish dubs, all French dubs, etc.
+
+```bash
+--project product-demo --tags "dubbing, spanish, product-demo"
+```
+
+### Style consistency
+
+1. **Track source-target pairs with tags.** Use `{"key":"source_lang","value":"en"}` and `{"key":"target_lang","value":"es"}` so you can find all translations of a given source.
+2. **For agents:** Maintain a localization manifest that tracks which videos have been dubbed into which languages.
 
 ---
 

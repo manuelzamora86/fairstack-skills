@@ -38,8 +38,25 @@ curl -X POST https://fairstack.ai/v1/voice/generate \
   -d '{
     "text": "Welcome to FairStack. AI generation at fair prices.",
     "voice": "internal_marco",
-    "model": "chatterbox-turbo"
+    "model": "chatterbox-turbo",
+    "project": "my-app",
+    "tags": [
+      {"key": "tag", "value": "onboarding"},
+      {"key": "tag", "value": "narration"},
+      {"key": "tag", "value": "welcome"}
+    ]
   }'
+```
+
+### CLI
+
+```bash
+fairstack generate voice \
+  --text "Welcome to FairStack. AI generation at fair prices." \
+  --voice internal_marco \
+  --model chatterbox-turbo \
+  --project my-app \
+  --tags "onboarding, narration, welcome"
 ```
 
 ### JavaScript / TypeScript
@@ -55,6 +72,12 @@ const response = await fetch("https://fairstack.ai/v1/voice/generate", {
     text: "Welcome to FairStack. AI generation at fair prices.",
     voice: "internal_marco",
     model: "chatterbox-turbo",
+    project: "my-app",
+    tags: [
+      { key: "tag", value: "onboarding" },
+      { key: "tag", value: "narration" },
+      { key: "tag", value: "welcome" },
+    ],
   }),
 });
 
@@ -76,6 +99,12 @@ resp = requests.post(
         "text": "Welcome to FairStack. AI generation at fair prices.",
         "voice": "internal_marco",
         "model": "chatterbox-turbo",
+        "project": "my-app",
+        "tags": [
+            {"key": "tag", "value": "onboarding"},
+            {"key": "tag", "value": "narration"},
+            {"key": "tag", "value": "welcome"},
+        ],
     },
 )
 
@@ -123,6 +152,8 @@ print(data["duration_sec"]) # e.g. 3.2
 | `options.stability` | number | No | Voice stability 0.0–1.0 |
 | `options.similarity` | number | No | Voice similarity 0.0–1.0 |
 | `options.style` | number | No | Style exaggeration 0.0–1.0 |
+| `project` | string | No | Project slug or ID to associate with this generation |
+| `tags` | array | No | Key-value tags for organization (max 20). Format: `[{"key":"tag","value":"narration"}]` |
 | `confirm` | boolean | No | Set `false` to get a cost quote without generating |
 | `quote_id` | string | No | Confirm a previously created quote |
 
@@ -261,6 +292,27 @@ curl https://fairstack.ai/v1/generations/gen_voice_456 \
 | 422 | `validation_error` | Invalid parameters (empty text, `ref_text` without `ref_audio_url`, etc.) |
 | 429 | — | Rate limited. Voice generation: 600 req/min. |
 | 503 | `SERVICE_UNAVAILABLE` | Provider temporarily unavailable. |
+
+---
+
+## Best Practices
+
+### Always use project + tags
+
+Every generation should include `project` and at least 3 tags. Tags help you recover, search, and filter your work later.
+
+```bash
+--project my-app --tags "onboarding, narration, welcome"
+```
+
+### Style consistency
+
+This is the #1 quality issue users hit. Inconsistent voices across generations sound unprofessional.
+
+1. **Use the same voice and model for all narration in a project.** Switching voices mid-project breaks immersion.
+2. **Define voice parameters once** (speed, emotion, instruct_text) and reuse them across all generations in the same project.
+3. **Tag which voice style was used:** `--tags "narrator-warm, tutorial, my-app"` so you can filter by voice style later.
+4. **For agents:** Create a voice guide file that your agent references before generating. Include the voice ID, model slug, speed, and any emotion settings.
 
 ---
 

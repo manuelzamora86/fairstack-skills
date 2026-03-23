@@ -38,7 +38,13 @@ curl -X POST https://fairstack.ai/v1/estimate \
   -H "Content-Type: application/json" \
   -d '{
     "modality": "image",
-    "model": "imagen-4-t2i"
+    "model": "imagen-4-t2i",
+    "project": "marketing-campaign",
+    "tags": [
+      {"key": "tag", "value": "estimate"},
+      {"key": "tag", "value": "hero-image"},
+      {"key": "tag", "value": "marketing"}
+    ]
   }'
 ```
 
@@ -54,6 +60,8 @@ curl -X POST https://fairstack.ai/v1/estimate \
 | `height` | number | No | Image height |
 | `aspect_ratio` | string | No | Aspect ratio (video) |
 | `options` | object | No | Model-specific options that may affect pricing |
+| `project` | string | No | Project slug or ID (for context in usage tracking) |
+| `tags` | array | No | Key-value tags for organization (max 20) |
 | `create_quote` | boolean | No | Create a confirmable quote (60s TTL) |
 
 ### Response
@@ -261,6 +269,18 @@ curl https://fairstack.ai/v1/account/balance \
 | 422 | `validation_error` | Invalid modality, bad parameters. |
 | 429 | — | Rate limited. |
 | 503 | `SERVICE_UNAVAILABLE` | Prompt enhancement temporarily unavailable. |
+
+---
+
+## Best Practices
+
+### Always use project + tags
+
+Include `project` and at least 3 tags in your estimate requests. When you confirm a quote and generate, these tags carry through to the generation record for searchability.
+
+### Style consistency
+
+Before generating, check that your estimate uses the same model you use for all other generations in the project. Switching models mid-project produces inconsistent aesthetics.
 
 ---
 

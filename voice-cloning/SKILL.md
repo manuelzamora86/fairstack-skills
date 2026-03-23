@@ -45,6 +45,17 @@ curl -X POST https://fairstack.ai/api/voice-clones \
   }'
 ```
 
+### CLI
+
+```bash
+fairstack clone create \
+  --audio-url "https://example.com/my-voice-sample.mp3" \
+  --name "My Custom Voice" \
+  --model f5-tts \
+  --project my-app \
+  --tags "voice-clone, narrator, professional"
+```
+
 ### Parameters
 
 | Parameter | Type | Required | Description |
@@ -234,6 +245,21 @@ print(resp.json()["output"]["url"])
 | 400 | — | Clone limit reached (10 max) or invalid input |
 | 404 | — | Clone not found or not owned by you |
 | 429 | — | Rate limited |
+
+---
+
+## Best Practices
+
+### Always tag cloned voice usage
+
+When generating TTS with a cloned voice, include `project` and at least 3 tags. Tag which clone was used so you can find all generations for a given voice.
+
+### Style consistency
+
+1. **Use the same model slug for the clone and for generation.** Creating a clone with `f5-tts` and then generating with `chatterbox-turbo` may produce different results.
+2. **Provide clear reference text** that matches the reference audio -- this improves clone accuracy.
+3. **Tag the clone identity:** `{"key":"clone","value":"my-narrator"}` on every generation using that clone.
+4. **For agents:** Store the clone ID and reference audio URL in a character manifest file.
 
 ---
 
