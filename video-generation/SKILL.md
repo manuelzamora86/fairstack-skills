@@ -356,6 +356,12 @@ This is the #1 quality issue users hit. Inconsistent visual styles across video 
 
 ---
 
+## Auto-Tagging
+
+Every generation is automatically tagged with AI-powered semantic labels (subject, style, mood, use-case). Use `fairstack tags list <id>` or `GET /v1/assets/:id/tags` to see them. Add your own tags with `fairstack tags add <id> --tags "b-roll, aerial"` or `POST /v1/assets/:id/tags`.
+
+---
+
 ## Pricing
 
 All prices are **infrastructure cost + 20% platform fee**. No hidden charges.
