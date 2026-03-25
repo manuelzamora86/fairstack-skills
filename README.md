@@ -52,6 +52,13 @@ Each skill is a self-contained guide for one capability of the FairStack API:
 | [**Voice Cloning**](./voice-cloning/SKILL.md) | Clone a voice from reference audio, use for TTS | `POST /api/voice-clones` |
 | [**Batch Generation**](./batch-generation/SKILL.md) | Up to 10 generations in one call — sweeps & comparisons | `POST /v1/batch` |
 
+### Management
+
+| Skill | Description | Endpoint |
+|-------|-------------|----------|
+| [**Team Management**](./team-management/SKILL.md) | Invite members, assign roles, shared credit pool | `GET /v1/team` |
+| [**Asset Management**](./asset-management/SKILL.md) | List, tag, search, bulk-delete generated files | `GET /v1/assets` |
+
 ### Utilities
 
 | Skill | Description | Endpoint |
